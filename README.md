@@ -174,28 +174,6 @@ java Main
 
 ---
 
-## Screenshots to Add Later
-
-Create a folder named:
-
-```text
-screenshots
-```
-
-Then add screenshots using these exact file names:
-
-```text
-start-screen.png
-gameplay.png
-power-up-gameplay.png
-game-over.png
-win-screen.png
-```
-
-After adding the images, GitHub will automatically show them in this README.
-
----
-
 ## Future Improvements
 
 - Add background music
