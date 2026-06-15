@@ -16,17 +16,17 @@ public final class GameConfig {
     public static final int WINDOW_X = 20;
     public static final int WINDOW_Y = 10;
     public static final int WINDOW_WIDTH = 700;
-    public static final int WINDOW_HEIGHT = 600;
+    public static final int WINDOW_HEIGHT = 900;
 
     public static final int PANEL_WIDTH = 692;
-    public static final int PANEL_HEIGHT = 592;
+    public static final int PANEL_HEIGHT = 900;
     public static final int RIGHT_BORDER_X = 691;
     public static final int BORDER_THICKNESS = 3;
 
     public static final int TIMER_DELAY = 8;
 
     public static final int PADDLE_START_X = 310;
-    public static final int PADDLE_Y = 550;
+    public static final int PADDLE_Y = 850;
     public static final int PADDLE_WIDTH = 100;
     public static final int PADDLE_HEIGHT = 12;
     public static final int PADDLE_HITBOX_HEIGHT = 8;
