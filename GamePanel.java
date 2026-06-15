@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 
+
 /**
  * Main game panel. Handles drawing, keyboard input, movement, collision,
  * score, lives, and restart behavior.
@@ -127,28 +128,34 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
         updateHighScore();
 
         g.setColor(GameConfig.WIN_MESSAGE_COLOR);
+
         g.setFont(GameConfig.LARGE_FONT);
-        g.drawString("You Won, Score: " + score, GameConfig.MESSAGE_X, GameConfig.MESSAGE_Y);
+        g.drawString("You Won!", 270, 120);
+
+        g.setFont(GameConfig.MEDIUM_FONT);
+        g.drawString("Player: " + playerName, 240, 190);
+        g.drawString("Score: " + score, 240, 250);
+        g.drawString("High Score: " + highScore, 240, 310);
 
         g.setFont(GameConfig.SMALL_FONT);
-        g.drawString("Player: " + playerName, GameConfig.PLAYER_X, GameConfig.PLAYER_Y);
-        g.drawString("Score: " + score, GameConfig.FINAL_SCORE_X, GameConfig.FINAL_SCORE_Y);
-        g.drawString("High Score: " + highScore, GameConfig.FINAL_SCORE_X, GameConfig.FINAL_SCORE_Y + 35);
-        g.drawString("Press Enter to Restart.", GameConfig.RESTART_X, GameConfig.RESTART_Y);
+        g.drawString("Press Enter to Restart", 230, 370);
     }
 
     private void showGameOverMessage(Graphics g) {
         updateHighScore();
 
         g.setColor(GameConfig.BORDER_COLOR);
+
         g.setFont(GameConfig.LARGE_FONT);
-        g.drawString("Game Over!", GameConfig.MESSAGE_X, GameConfig.MESSAGE_Y);
+        g.drawString("Game Over!", 250, 120);
 
         g.setFont(GameConfig.MEDIUM_FONT);
-        g.drawString("Player: " + playerName, GameConfig.PLAYER_X, GameConfig.PLAYER_Y);
-        g.drawString("Score: " + score, GameConfig.FINAL_SCORE_X, GameConfig.FINAL_SCORE_Y);
-        g.drawString("High Score: " + highScore, GameConfig.FINAL_SCORE_X, GameConfig.FINAL_SCORE_Y + 35);
-        g.drawString("Press Enter to Restart", GameConfig.RESTART_X, GameConfig.RESTART_Y);
+        g.drawString("Player: " + playerName, 240, 190);
+        g.drawString("Score: " + score, 240, 250);
+        g.drawString("High Score: " + highScore, 240, 310);
+
+        g.setFont(GameConfig.SMALL_FONT);
+        g.drawString("Press Enter to Restart", 230, 370);
     }
 
     private void updateHighScore() {
