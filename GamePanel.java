@@ -1,6 +1,7 @@
 /*
  * @author Humayra
  */
+
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -15,14 +16,15 @@ import java.util.Random;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-
-
 /**
  * Main game panel. Handles drawing, keyboard input, movement, collision,
- * score, lives, and restart behavior.
+ * score, lives, power-ups, high score, and restart behavior.
  */
 public class GamePanel extends JPanel implements KeyListener, ActionListener {
     private boolean play = false;
+    private boolean gameOver = false;
+    private boolean gameWon = false;
+
     private int score = 0;
     private int totalBricks = 0;
     private int lives = GameConfig.STARTING_LIVES;
@@ -72,30 +74,34 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
         drawBackground(g);
         brickMap.draw((Graphics2D) g);
         drawBorders(g);
+        drawScoreAndLives(g);
+
+        if (gameWon) {
+            showWinMessage(g);
+            return;
+        }
+
+        if (gameOver) {
+            showGameOverMessage(g);
+            return;
+        }
+
         drawPaddle(g);
         drawBall(g);
         drawPowerUps(g);
-        drawScoreAndLives(g);
-
-        if (totalBricks <= 0) {
-            showWinMessage(g);
-        }
-
-        if (ballY > GameConfig.BALL_MISSED_Y) {
-            handleMissedBall(g);
-        }
     }
 
     private void drawBackground(Graphics g) {
         g.setColor(GameConfig.BACKGROUND_COLOR);
-        g.fillRect(1, 1, GameConfig.PANEL_WIDTH, GameConfig.PANEL_HEIGHT);
+        g.fillRect(0, 0, GameConfig.PANEL_WIDTH, GameConfig.PANEL_HEIGHT);
     }
 
     private void drawBorders(Graphics g) {
         g.setColor(GameConfig.BORDER_COLOR);
         g.fillRect(0, 0, GameConfig.BORDER_THICKNESS, GameConfig.PANEL_HEIGHT);
         g.fillRect(0, 0, GameConfig.PANEL_WIDTH, GameConfig.BORDER_THICKNESS);
-        g.fillRect(GameConfig.RIGHT_BORDER_X, 0, GameConfig.BORDER_THICKNESS, GameConfig.PANEL_HEIGHT);
+        g.fillRect(GameConfig.PANEL_WIDTH - GameConfig.BORDER_THICKNESS, 0,
+                GameConfig.BORDER_THICKNESS, GameConfig.PANEL_HEIGHT);
     }
 
     private void drawPaddle(Graphics g) {
@@ -117,28 +123,28 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
     private void drawScoreAndLives(Graphics g) {
         g.setColor(GameConfig.BORDER_COLOR);
         g.setFont(GameConfig.MEDIUM_FONT);
-        g.drawString("Score: " + score, GameConfig.SCORE_X, GameConfig.SCORE_Y);
-        g.drawString("High Score: " + highScore, 260, 30);
-        g.drawString("Lives: " + lives, GameConfig.LIVES_X, GameConfig.LIVES_Y);
+
+        g.drawString("Lives: " + lives, 20, 30);
+        g.drawString("High Score: " + highScore, GameConfig.PANEL_WIDTH / 2 - 90, 30);
+        g.drawString("Score: " + score, GameConfig.PANEL_WIDTH - 170, 30);
     }
 
     private void showWinMessage(Graphics g) {
-        play = false;
-        stopBall();
         updateHighScore();
 
         g.setColor(GameConfig.WIN_MESSAGE_COLOR);
 
         g.setFont(GameConfig.LARGE_FONT);
-        g.drawString("You Won!", 270, 120);
+        g.drawString("You Won!", GameConfig.PANEL_WIDTH / 2 - 90, 170);
 
         g.setFont(GameConfig.MEDIUM_FONT);
-        g.drawString("Player: " + playerName, 240, 190);
-        g.drawString("Score: " + score, 240, 250);
-        g.drawString("High Score: " + highScore, 240, 310);
+        g.drawString("Player: " + playerName, GameConfig.PANEL_WIDTH / 2 - 100, 240);
+        g.drawString("Score: " + score, GameConfig.PANEL_WIDTH / 2 - 70, 300);
+        g.drawString("High Score: " + highScore, GameConfig.PANEL_WIDTH / 2 - 100, 360);
 
         g.setFont(GameConfig.SMALL_FONT);
-        g.drawString("Press Enter to Restart", 230, 370);
+        g.drawString("Press Enter to Restart", GameConfig.PANEL_WIDTH / 2 - 110, 430);
+        g.drawString("Press 1 Easy | 2 Medium | 3 Hard", GameConfig.PANEL_WIDTH / 2 - 140, 470);
     }
 
     private void showGameOverMessage(Graphics g) {
@@ -147,15 +153,16 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
         g.setColor(GameConfig.BORDER_COLOR);
 
         g.setFont(GameConfig.LARGE_FONT);
-        g.drawString("Game Over!", 250, 120);
+        g.drawString("Game Over!", GameConfig.PANEL_WIDTH / 2 - 110, 170);
 
         g.setFont(GameConfig.MEDIUM_FONT);
-        g.drawString("Player: " + playerName, 240, 190);
-        g.drawString("Score: " + score, 240, 250);
-        g.drawString("High Score: " + highScore, 240, 310);
+        g.drawString("Player: " + playerName, GameConfig.PANEL_WIDTH / 2 - 100, 240);
+        g.drawString("Score: " + score, GameConfig.PANEL_WIDTH / 2 - 70, 300);
+        g.drawString("High Score: " + highScore, GameConfig.PANEL_WIDTH / 2 - 100, 360);
 
         g.setFont(GameConfig.SMALL_FONT);
-        g.drawString("Press Enter to Restart", 230, 370);
+        g.drawString("Press Enter to Restart", GameConfig.PANEL_WIDTH / 2 - 110, 430);
+        g.drawString("Press 1 Easy | 2 Medium | 3 Hard", GameConfig.PANEL_WIDTH / 2 - 140, 470);
     }
 
     private void updateHighScore() {
@@ -165,44 +172,17 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
         }
     }
 
-    private void handleMissedBall(Graphics g) {
-        play = false;
-        stopBall();
-
-        if (lives > 0) {
-            lives--;
-        }
-
-        if (lives <= 0) {
-            showGameOverMessage(g);
-        } else {
-            resetBallAfterLifeLost();
-            play = true;
-        }
-    }
-
-    private void stopBall() {
-        ballXDirection = 0;
-        ballYDirection = 0;
-    }
-
-    private void resetBallAfterLifeLost() {
-        ballX = GameConfig.BALL_RESET_X;
-        ballY = GameConfig.BALL_RESET_Y;
-        ballXDirection = GameConfig.BALL_START_X_DIRECTION;
-        ballYDirection = getStartingBallYDirection(level);
-        paddleX = GameConfig.PADDLE_START_X;
-    }
-
     @Override
     public void actionPerformed(ActionEvent event) {
-        if (play) {
+        if (play && !gameOver && !gameWon) {
             handlePaddleCollision();
             handleBrickCollision();
             updatePowerUps();
             updatePaddlePowerUpTimer();
             moveBall();
             handleWallCollision();
+            checkMissedBall();
+            checkWin();
         }
 
         repaint();
@@ -210,6 +190,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 
     private void handlePaddleCollision() {
         Rectangle ballRect = new Rectangle(ballX, ballY, GameConfig.BALL_SIZE, GameConfig.BALL_SIZE);
+
         Rectangle paddleRect = new Rectangle(
                 paddleX,
                 GameConfig.PADDLE_Y,
@@ -243,11 +224,16 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
                         destroyedBricks++;
                         score += GameConfig.POINTS_PER_BRICK;
 
-                        maybeDropPowerUp(brickX + brickMap.brickWidth / 2, brickY + brickMap.brickHeight / 2);
+                        maybeDropPowerUp(
+                                brickX + brickMap.brickWidth / 2,
+                                brickY + brickMap.brickHeight / 2
+                        );
+
                         increaseBallSpeedIfNeeded();
                     }
 
-                    if (ballX + GameConfig.BALL_SIZE - 1 <= brickRect.x || ballX + 1 >= brickRect.x + brickRect.width) {
+                    if (ballX + GameConfig.BALL_SIZE - 1 <= brickRect.x
+                            || ballX + 1 >= brickRect.x + brickRect.width) {
                         ballXDirection = -ballXDirection;
                     } else {
                         ballYDirection = -ballYDirection;
@@ -258,7 +244,6 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
             }
         }
     }
-
 
     private void maybeDropPowerUp(int x, int y) {
         int chance = random.nextInt(100) + 1;
@@ -318,22 +303,13 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
         }
 
         if (Math.abs(ballXDirection) < GameConfig.MAX_BALL_SPEED) {
-            if (ballXDirection > 0) {
-                ballXDirection++;
-            } else {
-                ballXDirection--;
-            }
+            ballXDirection += ballXDirection > 0 ? 1 : -1;
         }
 
         if (Math.abs(ballYDirection) < GameConfig.MAX_BALL_SPEED) {
-            if (ballYDirection > 0) {
-                ballYDirection++;
-            } else {
-                ballYDirection--;
-            }
+            ballYDirection += ballYDirection > 0 ? 1 : -1;
         }
     }
-
 
     private void moveBall() {
         ballX += ballXDirection;
@@ -341,17 +317,80 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
     }
 
     private void handleWallCollision() {
-        if (ballX < 0) {
-            ballXDirection = -ballXDirection;
+        if (ballX <= 0) {
+            ballXDirection = Math.abs(ballXDirection);
         }
 
-        if (ballY < 0) {
-            ballYDirection = -ballYDirection;
+        if (ballY <= 0) {
+            ballYDirection = Math.abs(ballYDirection);
         }
 
-        if (ballX > GameConfig.BALL_MAX_X) {
-            ballXDirection = -ballXDirection;
+        if (ballX >= GameConfig.PANEL_WIDTH - GameConfig.BALL_SIZE) {
+            ballXDirection = -Math.abs(ballXDirection);
         }
+    }
+
+    private void checkMissedBall() {
+        if (ballY <= GameConfig.PANEL_HEIGHT) {
+            return;
+        }
+
+        lives--;
+
+        if (lives <= 0) {
+            lives = 0;
+            endGame();
+        } else {
+            resetBallAfterLifeLost();
+        }
+    }
+
+    private void checkWin() {
+        if (totalBricks <= 0) {
+            gameWon = true;
+            play = false;
+            stopBall();
+            powerUps.clear();
+            updateHighScore();
+        }
+    }
+
+    private void endGame() {
+        gameOver = true;
+        play = false;
+        stopBall();
+        powerUps.clear();
+
+        /*
+         * Move the ball outside the visible screen.
+         * This fixes the issue where the ball remains visible after game over.
+         */
+        ballX = -100;
+        ballY = -100;
+
+        updateHighScore();
+    }
+
+    private void stopBall() {
+        ballXDirection = 0;
+        ballYDirection = 0;
+    }
+
+    private void resetBallAfterLifeLost() {
+        play = false;
+
+        powerUps.clear();
+        paddlePowerUpActive = false;
+        paddlePowerUpTimer = 0;
+
+        paddleWidth = getPaddleWidthForLevel(level);
+        paddleX = GameConfig.PADDLE_START_X;
+
+        ballX = GameConfig.BALL_START_X;
+        ballY = GameConfig.BALL_START_Y;
+
+        ballXDirection = GameConfig.BALL_START_X_DIRECTION;
+        ballYDirection = getStartingBallYDirection(level);
     }
 
     @Override
@@ -361,11 +400,11 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 
     @Override
     public void keyPressed(KeyEvent event) {
-        if (event.getKeyCode() == KeyEvent.VK_RIGHT) {
+        if (event.getKeyCode() == KeyEvent.VK_RIGHT && !gameOver && !gameWon) {
             movePaddleRight();
         }
 
-        if (event.getKeyCode() == KeyEvent.VK_LEFT) {
+        if (event.getKeyCode() == KeyEvent.VK_LEFT && !gameOver && !gameWon) {
             movePaddleLeft();
         }
 
@@ -374,14 +413,15 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
         }
 
         if (event.getKeyCode() == KeyEvent.VK_1 && !play) {
-            level = GameConfig.EASY_LEVEL;
-            restartGame(level);
-        } else if (event.getKeyCode() == KeyEvent.VK_2 && !play) {
-            level = GameConfig.MEDIUM_LEVEL;
-            restartGame(level);
-        } else if (event.getKeyCode() == KeyEvent.VK_3 && !play) {
-            level = GameConfig.HARD_LEVEL;
-            restartGame(level);
+            restartGame(GameConfig.EASY_LEVEL);
+        }
+
+        if (event.getKeyCode() == KeyEvent.VK_2 && !play) {
+            restartGame(GameConfig.MEDIUM_LEVEL);
+        }
+
+        if (event.getKeyCode() == KeyEvent.VK_3 && !play) {
+            restartGame(GameConfig.HARD_LEVEL);
         }
     }
 
@@ -414,7 +454,11 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 
     private void restartGame(int selectedLevel) {
         level = selectedLevel;
+
         play = true;
+        gameOver = false;
+        gameWon = false;
+
         score = 0;
         lives = GameConfig.STARTING_LIVES;
         destroyedBricks = 0;
@@ -434,7 +478,6 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
         setupLevel(level);
         repaint();
     }
-
 
     private void setupLevel(int selectedLevel) {
         switch (selectedLevel) {
@@ -460,11 +503,11 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
                 break;
 
             default:
+                level = GameConfig.EASY_LEVEL;
                 brickMap = new BrickMap(GameConfig.EASY_ROWS, GameConfig.EASY_COLUMNS);
                 totalBricks = GameConfig.EASY_ROWS * GameConfig.EASY_COLUMNS;
                 ballYDirection = GameConfig.DEFAULT_BALL_Y_DIRECTION;
                 paddleWidth = GameConfig.EASY_PADDLE_WIDTH;
-                level = GameConfig.EASY_LEVEL;
                 break;
         }
     }
@@ -480,7 +523,6 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 
         return GameConfig.EASY_PADDLE_WIDTH;
     }
-
 
     private int getStartingBallYDirection(int selectedLevel) {
         if (selectedLevel == GameConfig.HARD_LEVEL) {

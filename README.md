@@ -14,21 +14,13 @@ The goal of the game is simple: control the paddle, keep the ball alive, break a
 
 ![Start Screen](screenshots/start-screen.png)
 
+### Level Selection
+
+![Power-Up Gameplay](screenshots/level-gameplay.png)
+
 ### Gameplay
 
 ![Gameplay](screenshots/gameplay.png)
-
-### Power-Up Gameplay
-
-![Power-Up Gameplay](screenshots/power-up-gameplay.png)
-
-### Game Over Screen
-
-![Game Over](screenshots/game-over.png)
-
-### Win Screen
-
-![Win Screen](screenshots/win-screen.png)
 
 ---
 
