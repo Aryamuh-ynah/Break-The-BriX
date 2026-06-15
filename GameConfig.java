@@ -90,4 +90,35 @@ public final class GameConfig {
     public static final Color TOP_BRICK_COLOR = new Color(0x7f00ff);
     public static final Color BOTTOM_BRICK_COLOR = new Color(0xff33ff);
     public static final Color WIN_MESSAGE_COLOR = new Color(0xff6464);
+    
+
+    // High score
+    public static final String HIGH_SCORE_FILE = "highscore.txt";
+
+    // Difficulty-based paddle sizes
+    public static final int EASY_PADDLE_WIDTH = 120;
+    public static final int MEDIUM_PADDLE_WIDTH = 100;
+    public static final int HARD_PADDLE_WIDTH = 80;
+
+    // Ball speed increase
+    public static final int SPEED_INCREASE_EVERY_N_BRICKS = 5;
+    public static final int MAX_BALL_SPEED = 7;
+
+    // Brick strength values
+    public static final int WEAK_BRICK_STRENGTH = 1;
+    public static final int MEDIUM_BRICK_STRENGTH = 2;
+    public static final int STRONG_BRICK_STRENGTH = 3;
+
+    // Power-up settings
+    public static final int POWER_UP_SIZE = 20;
+    public static final int POWER_UP_FALL_SPEED = 2;
+    public static final int POWER_UP_DURATION_TICKS = 600;
+    public static final int POWER_UP_DROP_CHANCE_PERCENT = 25;
+    public static final int POWER_UP_PADDLE_BONUS_WIDTH = 40;
+
+    public static final Color WEAK_BRICK_COLOR = new Color(0x66ccff);
+    public static final Color MEDIUM_BRICK_COLOR = new Color(0xffcc00);
+    public static final Color STRONG_BRICK_COLOR = new Color(0xff6666);
+    public static final Color POWER_UP_COLOR = new Color(0x33cc33);
+
 }

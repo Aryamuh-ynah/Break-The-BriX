@@ -2,22 +2,46 @@
 
 A Java Swing brick breaker game created as a university project.
 
-## This corrected version includes
+## Features
 
-1. Removed compiled `.class` files from the project.
-2. Split the old `Main.java` into separate files.
-3. Renamed `Map` to `BrickMap`.
-4. Renamed `GamePlay` to `GamePanel`.
-5. Fixed restart so it keeps the selected difficulty.
-6. Added `GameConfig.java` to remove most hardcoded magic numbers.
+- Player name input
+- Difficulty selection: Easy, Medium, Hard
+- Score system
+- Lives system
+- Brick collision
+- Paddle control
+- Game over and win screen
+- Restart option
 
-## How to run
+## Technologies Used
+
+- Java
+- Java Swing
+- AWT Graphics
+- Object-Oriented Programming
+
+## How to Run
+
+Clone the project:
+
+```bash
+git clone https://github.com/Ayramuh-ynah/break-the-brix.git
+
+```
+
+Go to the project folder:
+
+````bash
+cd break-the-brix
+
+
+
 
 Compile:
 
 ```bash
 javac *.java
-```
+````
 
 Run:
 
